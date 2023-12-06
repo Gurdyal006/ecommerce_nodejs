@@ -8,7 +8,7 @@ import cloudinary from "cloudinary";
 
 // ===== file routes ====
 import userRoutes from "./routes/userRoutes.js";
-
+import productRoutes from "./routes/productRoutes.js";
 // ====== routes mongodb ====
 import connectDb from "./config/db.js";
 
@@ -35,6 +35,7 @@ app.use(cookieParser());
 
 // api routes
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/product", productRoutes);
 
 const PORT = process.env.PORT || 4000;
 
