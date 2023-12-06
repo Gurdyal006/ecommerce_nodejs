@@ -12,8 +12,12 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     profilePic: {
-      type: String, // cloudinary url
-      default: "public_url",
+      public_id: {
+        type: String,
+      },
+      url: {
+        type: String,
+      },
     },
     email: {
       type: String,
@@ -48,7 +52,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // password hashing
-userSchema.pre("save", async function () {
+userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
 });

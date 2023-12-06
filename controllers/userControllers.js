@@ -1,5 +1,7 @@
 import User from "../models/userModel.js";
 import { createJWTToken } from "../utils/jwt.js";
+import cloudinary from "cloudinary";
+import { getDataUri } from "../utils/fileUpload.js";
 
 export const registerController = async (req, res) => {
   const {
@@ -196,6 +198,37 @@ export const updateUserPassword = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).send({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+export const updateProfilePicController = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    // get file from client
+    const file = getDataUri(req.file);
+
+    // delete prevoius image from cloudinary
+    await cloudinary.v2.uploader.destroy(user.profilePic.public_id);
+
+    // file update latest and replace old one
+    const newPic = await cloudinary.v2.uploader.upload(file.content);
+
+    user.profilePic = {
+      public_id: newPic.public_id,
+      url: newPic.secure_url,
+    };
+
+    // save image in db
+    await user.save();
+    res.status(200).send({
+      success: true,
+      message: " new profile pic updated",
+    });
+  } catch (error) {
+    res.status(500).send({
       success: false,
       message: error,
     });
