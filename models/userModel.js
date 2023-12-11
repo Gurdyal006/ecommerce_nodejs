@@ -51,6 +51,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "user",
     },
+    answer: {
+      type: String,
+      required: [true, "answer is required"], // withoput email password reset
+    },
   },
   { timestamps: true }
 );

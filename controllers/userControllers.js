@@ -234,3 +234,35 @@ export const updateProfilePicController = async (req, res) => {
     });
   }
 };
+
+export const userResetPasswordController = async (req, res) => {
+  try {
+    const { email, newPassword, answer } = req.body;
+    if (!email || !newPassword || !answer) {
+      return res.status(400).json({
+        success: false,
+        message: "all fields required",
+      });
+    }
+
+    const user = await User.findOne({ email, answer });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "user and answer not found",
+      });
+    }
+
+    newPassword = password;
+    await user.save();
+    return res.status(200).json({
+      success: true,
+      message: "password reset",
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: error,
+    });
+  }
+};
