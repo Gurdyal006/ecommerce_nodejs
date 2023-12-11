@@ -5,10 +5,11 @@ const categorySchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, "name is required"],
+      unique: true,
     },
   },
   { timestamps: true }
 );
 
-const categories = mongoose.model("Category", categorySchema);
-export default categories;
+const categoryModel = mongoose.model("Category", categorySchema);
+export default categoryModel;

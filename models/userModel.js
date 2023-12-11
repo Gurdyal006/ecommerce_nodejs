@@ -47,6 +47,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Phone is required"],
     },
+    role: {
+      type: String,
+      default: "user",
+    },
   },
   { timestamps: true }
 );
