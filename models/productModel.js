@@ -1,11 +1,31 @@
 import mongoose from "mongoose";
 
-const productSchema = new mongoose.Schema(
+// REVIEW SCHEMA
+const reviewSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: [true, "name is required"],
     },
+    comment: {
+      type: String,
+    },
+    rating: {
+      type: Number,
+      default: 0,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
+      required: [true, "user is required"],
+    },
+  },
+  { timestamps: true }
+);
+
+// PRODUCT SCHEMA
+const productSchema = new mongoose.Schema(
+  {
     name: {
       type: String,
       required: [true, "name is required"],
@@ -32,6 +52,15 @@ const productSchema = new mongoose.Schema(
         url: String,
       },
     ],
+    reviews: [reviewSchema],
+    rating: {
+      type: Number,
+      default: 0,
+    },
+    reviewCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

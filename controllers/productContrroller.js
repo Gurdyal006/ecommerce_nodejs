@@ -280,3 +280,66 @@ export const deleteProductController = async (req, res) => {
     });
   }
 };
+
+// review product
+export const reviewProductController = async (req, res) => {
+  try {
+    const { comment, rating } = req.body;
+
+    // product find
+    const product = await productModel.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "product not found",
+      });
+    }
+
+    const reviewedExist = product.reviews.find(
+      (r) => r.user.toString() === req.user._id.toString() // in reviews user check with login user id
+    );
+
+    if (reviewedExist) {
+      return res.status(404).json({
+        success: false,
+        message: "already reviewed ",
+      });
+    }
+
+    // new create review in first time
+    const review = {
+      name: req.user.firstName,
+      comment,
+      rating: Number(rating),
+      user: req.user._id,
+    };
+
+    // object push in review object in product table
+    product.reviews.push(review);
+
+    // check total review length
+    product.reviewCount = product.reviews.length;
+    // calculate ratings
+    product.rating =
+      product.reviews.reduce((acc, curr) => curr.rating + acc, 0) /
+      product.reviewCount;
+    await product.save();
+    res.status(200).send({
+      success: true,
+      message: "Review Added!",
+    });
+  } catch (error) {
+    console.log(error);
+    if (error.name === "CastError") {
+      return res.status(500).json({
+        success: false,
+        message: "Invalid id",
+      });
+    }
+    return res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
+};

@@ -13,6 +13,7 @@ export const registerController = async (req, res) => {
     city,
     country,
     phone,
+    answer,
   } = req.body;
 
   try {
@@ -23,7 +24,8 @@ export const registerController = async (req, res) => {
       !address ||
       !city ||
       !country ||
-      !phone
+      !phone ||
+      !answer
     ) {
       return res.status(400).json({
         success: false,
@@ -46,6 +48,7 @@ export const registerController = async (req, res) => {
       city,
       country,
       phone,
+      answer,
     });
     res.status(201).json({
       success: true,
@@ -235,6 +238,8 @@ export const updateProfilePicController = async (req, res) => {
   }
 };
 
+// without email send reset password
+
 export const userResetPasswordController = async (req, res) => {
   try {
     const { email, newPassword, answer } = req.body;
@@ -253,11 +258,12 @@ export const userResetPasswordController = async (req, res) => {
       });
     }
 
-    newPassword = password;
+    user.password = newPassword;
     await user.save();
+
     return res.status(200).json({
       success: true,
-      message: "password reset",
+      message: "password reset please login!",
     });
   } catch (error) {
     return res.status(500).send({

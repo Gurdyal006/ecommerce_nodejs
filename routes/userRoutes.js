@@ -8,6 +8,7 @@ import {
   updateUserProfileController,
   userLogout,
   userProfileController,
+  userResetPasswordController,
 } from "../controllers/userControllers.js";
 import { isAuth } from "../middlewares/authMiddleware.js";
 import { singleUpload } from "../middlewares/multerMiddleware.js";
@@ -27,6 +28,9 @@ router.put(
   singleUpload,
   updateProfilePicController
 );
+
+// without email reset password
+router.post("/reset-password", userResetPasswordController);
 
 // export
 export default router;
