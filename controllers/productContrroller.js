@@ -4,7 +4,17 @@ import { getDataUri } from "./../utils/fileUpload.js";
 
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await productModel.find({});
+    const { keyword, category } = req.query;
+
+    const products = await productModel
+      .find({
+        name: {
+          $regex: keyword ? keyword : "",
+          $options: "i",
+        },
+        category: category ? category : "",
+      })
+      .populate("category");
     if (products.length === 0) {
       return res.status(500).json({
         success: false,
@@ -14,7 +24,26 @@ export const getAllProducts = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "all products fetch",
+      totalProducts: products.length,
       products,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "api error",
+    });
+  }
+};
+
+// top 3 products
+export const getTopProductController = async (req, res) => {
+  try {
+    const product = await productModel.find({}).sort({ rating: -1 }).limit(3);
+    return res.status(200).json({
+      success: true,
+      message: "Top 3 product fetched",
+      product,
     });
   } catch (error) {
     console.log(error);

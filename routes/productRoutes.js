@@ -5,6 +5,7 @@ import {
   deleteProductImageController,
   getAllProducts,
   getSingleProductById,
+  getTopProductController,
   reviewProductController,
   updateProductController,
   updateProductImageController,
@@ -15,6 +16,10 @@ import { singleUpload } from "../middlewares/multerMiddleware.js";
 const router = express.Router();
 
 router.get("/get-all", getAllProducts);
+
+// top 3 products
+router.get("/get-top-3", getTopProductController);
+
 router.get("/get-By-Id/:id", getSingleProductById);
 router.post("/create", isAuth, isAdmin, singleUpload, creteProductController);
 router.put("/update/:id", isAuth, isAdmin, updateProductController);

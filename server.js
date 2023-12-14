@@ -5,6 +5,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cloudinary from "cloudinary";
+import helmet from "helmet";
+import ExpressMongoSanitize from "express-mongo-sanitize";
 
 // ===== file routes ====
 import userRoutes from "./routes/userRoutes.js";
@@ -31,6 +33,8 @@ cloudinary.config({
 const app = express();
 
 // middlewares
+app.use(helmet());
+app.use(ExpressMongoSanitize());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
